@@ -2,7 +2,7 @@ package org.example.domain;
 
 import lombok.RequiredArgsConstructor;
 import org.example.model.City;
-import org.example.model.TemperatureEntity;
+import org.example.model.TemperatureEntry;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -27,8 +27,8 @@ public class TemperatureCsvFileService implements TemperatureFileService {
     @Override
     public Set<City> fetchCities() throws IOException {
         try (Stream<String> lines = fileConfig.getFileStreamLines()) {
-            return lines.map(TemperatureEntity::fromCsvLine)
-                    .map(TemperatureEntity::getCity)
+            return lines.map(TemperatureEntry::fromCsvLine)
+                    .map(TemperatureEntry::getCity)
                     .collect(Collectors.toSet());
         }
     }
@@ -43,7 +43,7 @@ public class TemperatureCsvFileService implements TemperatureFileService {
     public List<TemperatureResponseEntity> getYearlyAvgTemperatureForCity(final City city) throws IOException {
         Map<Integer, TemperatureResponseEntity> resultMap = new HashMap<>();
         try (Stream<String> lines = fileConfig.getFileStreamLines()) {
-            lines.map(TemperatureEntity::fromCsvLine)
+            lines.map(TemperatureEntry::fromCsvLine)
                     .filter(entry -> entry.getCity().equals(city))
                     .forEach(entry -> {
                         TemperatureResponseEntity entity = getResponseEntityByEntry(resultMap, entry);
@@ -56,7 +56,7 @@ public class TemperatureCsvFileService implements TemperatureFileService {
         return resultList;
     }
 
-    private TemperatureResponseEntity getResponseEntityByEntry(final Map<Integer, TemperatureResponseEntity> map, final TemperatureEntity entry) {
+    private TemperatureResponseEntity getResponseEntityByEntry(final Map<Integer, TemperatureResponseEntity> map, final TemperatureEntry entry) {
         int year = entry.getDateTime().getYear();
         return map.computeIfAbsent(year, k -> new TemperatureResponseEntity(year));
     }
