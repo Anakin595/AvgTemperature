@@ -1,4 +1,4 @@
 
 file:
   csv:
-    location: /Users/kika/Documents/projects/AvgTemperature/src/main/resources/example_file.csv
+    location: *absolute/path/to/the/csv/file*
