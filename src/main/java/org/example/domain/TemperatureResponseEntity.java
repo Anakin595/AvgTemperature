@@ -35,6 +35,10 @@ public class TemperatureResponseEntity {
         temperatureEntriesNumber++;
     }
 
+    @Override
+    public String toString() {
+        return year + ": " + averageTemperature;
+    }
 
 
 }

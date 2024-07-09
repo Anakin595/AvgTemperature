@@ -6,13 +6,12 @@ import org.example.model.TemperatureEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static java.util.stream.Collectors.groupingBy;
 
 @RequiredArgsConstructor
 @Service
@@ -41,21 +40,26 @@ public class TemperatureCsvFileService implements TemperatureFileService {
      * @return List of TemperatureResponseEntity
      */
     @Override
-    public List<TemperatureResponseEntity> getYearlyAvgTemperatureForCity(City city) throws IOException {
-        List<TemperatureResponseEntity> resultList = new ArrayList<>();
-
+    public List<TemperatureResponseEntity> getYearlyAvgTemperatureForCity(final City city) throws IOException {
+        Map<Integer, TemperatureResponseEntity> resultMap = new HashMap<>();
         try (Stream<String> lines = fileConfig.getFileStreamLines()) {
             lines.map(TemperatureEntity::fromCsvLine)
-                    .filter(entity -> entity.getCity().equals(city)) // filter by City name
-                    .collect(groupingBy(entity -> entity.getDateTime().getYear())) //group by year,
-                    .forEach((key, value) -> { // for each year, calculate average temperature
-                        TemperatureResponseEntity responseEntity = new TemperatureResponseEntity(key);
-                        value.forEach(tempEntry -> responseEntity.addTemperatureEntry(tempEntry.getTemperatureValue()));
-                        responseEntity.calculateAvgTemperature();
-                        resultList.add(responseEntity);
+                    .filter(entry -> entry.getCity().equals(city))
+                    .forEach(entry -> {
+                        TemperatureResponseEntity entity = getResponseEntityByEntry(resultMap, entry);
+                        entity.addTemperatureEntry(entry.getTemperatureValue());
                     });
         }
 
+        List<TemperatureResponseEntity> resultList = resultMap.values().stream().toList();
+        resultList.forEach(TemperatureResponseEntity::calculateAvgTemperature);
         return resultList;
     }
+
+    private TemperatureResponseEntity getResponseEntityByEntry(final Map<Integer, TemperatureResponseEntity> map, final TemperatureEntity entry) {
+        int year = entry.getDateTime().getYear();
+        return map.computeIfAbsent(year, k -> new TemperatureResponseEntity(year));
+    }
+
+
 }
