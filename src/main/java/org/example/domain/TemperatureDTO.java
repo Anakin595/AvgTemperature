@@ -8,7 +8,7 @@ import lombok.Getter;
 import org.example.utils.DecimalSerializer;
 
 @Data
-public class TemperatureResponseEntity {
+public class TemperatureDTO {
 
     private final int year;
     @JsonSerialize(using = DecimalSerializer.class)
@@ -22,11 +22,11 @@ public class TemperatureResponseEntity {
     @Getter(AccessLevel.PRIVATE)
     private double cumulativeTemperature;
 
-    TemperatureResponseEntity(int year) {
+    TemperatureDTO(int year) {
         this(year, null);
     }
 
-    TemperatureResponseEntity(int year, Double initialAvgTemperature) {
+    TemperatureDTO(int year, Double initialAvgTemperature) {
         this.year = year;
         averageTemperature = initialAvgTemperature;
     }

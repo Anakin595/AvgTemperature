@@ -40,25 +40,25 @@ public class TemperatureCsvFileService implements TemperatureFileService {
      * @return List of TemperatureResponseEntity
      */
     @Override
-    public List<TemperatureResponseEntity> getYearlyAvgTemperatureForCity(final City city) throws IOException {
-        Map<Integer, TemperatureResponseEntity> resultMap = new HashMap<>();
+    public List<TemperatureDTO> getYearlyAvgTemperatureForCity(final City city) throws IOException {
+        Map<Integer, TemperatureDTO> resultMap = new HashMap<>();
         try (Stream<String> lines = fileConfig.getFileStreamLines()) {
             lines.map(TemperatureEntry::fromCsvLine)
                     .filter(entry -> entry.getCity().equals(city))
                     .forEach(entry -> {
-                        TemperatureResponseEntity entity = getResponseEntityByEntry(resultMap, entry);
+                        TemperatureDTO entity = getResponseEntityByEntry(resultMap, entry);
                         entity.addTemperatureEntry(entry.getTemperatureValue());
                     });
         }
 
-        List<TemperatureResponseEntity> resultList = resultMap.values().stream().toList();
-        resultList.forEach(TemperatureResponseEntity::calculateAvgTemperature);
+        List<TemperatureDTO> resultList = resultMap.values().stream().toList();
+        resultList.forEach(TemperatureDTO::calculateAvgTemperature);
         return resultList;
     }
 
-    private TemperatureResponseEntity getResponseEntityByEntry(final Map<Integer, TemperatureResponseEntity> map, final TemperatureEntry entry) {
+    private TemperatureDTO getResponseEntityByEntry(final Map<Integer, TemperatureDTO> dtoMap, final TemperatureEntry entry) {
         int year = entry.getDateTime().getYear();
-        return map.computeIfAbsent(year, k -> new TemperatureResponseEntity(year));
+        return dtoMap.computeIfAbsent(year, k -> new TemperatureDTO(year));
     }
 
 

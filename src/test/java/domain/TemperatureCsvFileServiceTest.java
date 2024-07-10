@@ -2,7 +2,7 @@ package domain;
 
 import org.example.domain.CsvFileConfig;
 import org.example.domain.TemperatureCsvFileService;
-import org.example.domain.TemperatureResponseEntity;
+import org.example.domain.TemperatureDTO;
 import org.example.model.City;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -49,7 +49,7 @@ class TemperatureCsvFileServiceTest {
     @Test
     @DisplayName("Should calculate yearly average temperature for specific City ")
     void getAvgYearlyTemp_successful() throws IOException {
-        List<TemperatureResponseEntity> result = temperatureCsvFileService.getYearlyAvgTemperatureForCity(City.of("Warszawa"));
+        List<TemperatureDTO> result = temperatureCsvFileService.getYearlyAvgTemperatureForCity(City.of("Warszawa"));
         assertNotNull(result);
         assertEquals(3, result.size());
     }

@@ -10,6 +10,6 @@ public interface TemperatureFileService {
 
     Set<City> fetchCities() throws IOException;
 
-    List<TemperatureResponseEntity> getYearlyAvgTemperatureForCity(City city) throws IOException;
+    List<TemperatureDTO> getYearlyAvgTemperatureForCity(City city) throws IOException;
 
 }

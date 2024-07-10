@@ -8,16 +8,15 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class TemperatureResponseEntityTest {
+class TemperatureDTOTest {
 
-    private TemperatureResponseEntity tempEntity;
+    private TemperatureDTO tempEntity;
 
     private final int TEST_YEAR = 2024;
-    private final double TEST_TEMP_ENTRY_VALUE = 10.0;
 
     @BeforeEach
     void setup() {
-        tempEntity = new TemperatureResponseEntity(TEST_YEAR);
+        tempEntity = new TemperatureDTO(TEST_YEAR);
     }
 
     @Test
@@ -25,6 +24,7 @@ class TemperatureResponseEntityTest {
     void should_calculate_only_when_called() {
         //given
         //when
+        double TEST_TEMP_ENTRY_VALUE = 10.0;
         tempEntity.addTemperatureEntry(TEST_TEMP_ENTRY_VALUE);
         //then
         assertEquals(TEST_YEAR, tempEntity.getYear());

@@ -3,7 +3,7 @@ package org.example.controler;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.domain.TemperatureFileService;
-import org.example.domain.TemperatureResponseEntity;
+import org.example.domain.TemperatureDTO;
 import org.example.model.City;
 import org.example.utils.Timed;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +25,7 @@ public class TemperatureController {
 
     @GetMapping("{city}")
     @Timed
-    public ResponseEntity<List<TemperatureResponseEntity>> getYearlyAvgTemperature(
+    public ResponseEntity<List<TemperatureDTO>> getYearlyAvgTemperature(
             @PathVariable("city") String city
     ) throws IOException {
         log.info("Calculating yearly avg temperature for {}", city);
